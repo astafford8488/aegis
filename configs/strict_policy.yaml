@@ -1,0 +1,52 @@
+name: strict
+version: "1.0"
+
+input:
+  max_length: 2000
+  max_tokens: 1024
+  blocked_patterns:
+    - "ignore\\s+(all\\s+)?previous"
+    - "system\\s*prompt"
+    - "override\\s+safety"
+    - "\\[SYSTEM"
+    - "ADMIN\\s+ACCESS"
+    - "base64\\s+decode"
+    - "rot13"
+  allow_code: false
+  allow_urls: false
+
+output:
+  max_tokens: 2048
+  scan_pii: true
+  scan_secrets: true
+  scan_code: true
+  blocked_patterns:
+    - "password"
+    - "api[_-]?key"
+    - "secret"
+    - "credential"
+    - "BEGIN.*KEY"
+
+rate_limit:
+  requests_per_minute: 20
+  tokens_per_minute: 50000
+  burst_limit: 5
+
+tools:
+  allowed_tools:
+    - search
+    - calculator
+  blocked_tools:
+    - shell
+    - bash
+    - file_write
+    - file_delete
+    - code_execute
+    - send_email
+    - http_request
+  require_approval:
+    - file_read
+    - api_call
+  max_tool_calls: 10
+  allow_file_access: false
+  allow_network_access: false

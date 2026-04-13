@@ -1,0 +1,40 @@
+name: default
+version: "1.0"
+
+input:
+  max_length: 10000
+  max_tokens: 4096
+  blocked_patterns:
+    - "ignore\\s+(all\\s+)?previous\\s+instructions?"
+    - "\\[SYSTEM\\s*(UPDATE|OVERRIDE)\\]"
+    - "PRIORITY\\s+OVERRIDE"
+  allow_code: true
+  allow_urls: true
+
+output:
+  max_tokens: 4096
+  scan_pii: true
+  scan_secrets: true
+  scan_code: true
+  blocked_patterns:
+    - "password\\s*[:=]\\s*\\S+"
+    - "BEGIN\\s+PRIVATE\\s+KEY"
+
+rate_limit:
+  requests_per_minute: 60
+  tokens_per_minute: 100000
+  burst_limit: 10
+
+tools:
+  blocked_tools:
+    - shell
+    - bash
+    - terminal
+    - delete_all
+  max_tool_calls: 50
+  allow_file_access: false
+  allow_network_access: true
+  allowed_domains:
+    - "*.openai.com"
+    - "*.anthropic.com"
+    - "*.googleapis.com"
